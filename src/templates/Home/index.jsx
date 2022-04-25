@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { useCallback, useEffect, useState } from 'react';
 
 import './styles.css';
@@ -6,7 +7,7 @@ import './styles.css';
 import { loadPosts } from '../../utils/load-posts';
 
 // Components
-import { Posts } from '../../components/Posts'
+import { Posts } from '../../components/Posts';
 import { Button } from '../../components/Button';
 import { TextInput } from '../../components/TextInput';
 
@@ -19,21 +20,18 @@ export const Home = () => {
 
   const noMorePosts = page + postsPerPage >= allPosts.length;
 
-  const filteredPosts = !!searchValue ?
-    allPosts.filter(post => {
-      return post.title.toLowerCase().includes(
-        searchValue.toLowerCase()
-      );
+  const filteredPosts = searchValue
+    ? allPosts.filter((post) => {
+      return post.title.toLowerCase().includes(searchValue.toLowerCase());
     })
-    :
-    posts;
+    : posts;
 
   const handleLoadPosts = useCallback(async (page, postsPerPage) => {
     const postsAndPhotos = await loadPosts();
 
     setPosts(postsAndPhotos.slice(page, postsPerPage));
     setAllPosts(postsAndPhotos);
-  }, [])
+  }, []);
 
   useEffect(() => {
     handleLoadPosts(0, postsPerPage);
@@ -47,52 +45,34 @@ export const Home = () => {
 
     setPosts(posts);
     setPage(nextPage);
-  }
+  };
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     const { value } = e.target;
     setSearchValue(value);
-  }
+  };
 
   return (
-    <section className="container" >
+    <section className="container">
       <div className="search-container">
-        {!!searchValue && (
-          <h1>Search Value: {searchValue}</h1>
-        )}
+        {!!searchValue && <h1>Search Value: {searchValue}</h1>}
 
         <h2>Quantidade total de posts: {allPosts.length}</h2>
         <h3>Quantidade de posts exibidos: {filteredPosts.length}</h3>
         <TextInput searchValue={searchValue} handleChange={handleChange} />
       </div>
 
-      {filteredPosts.length > 0 && (
-        <Posts posts={filteredPosts} />
-      )
-      }
+      {filteredPosts.length > 0 && <Posts posts={filteredPosts} />}
 
-      {
-        filteredPosts.length === 0 && (
-          <p>Não existem <b>posts</b> para esta pesquisa!</p>
-        )
-      }
+      {filteredPosts.length === 0 && (
+        <p>
+          Não existem <b>posts</b> para esta pesquisa!
+        </p>
+      )}
 
       <div className="button-container">
-        {!searchValue && (
-          <Button
-            text="Load more posts"
-            onClick={loadMorePosts}
-            disabled={noMorePosts}
-          />
-        )}
+        {!searchValue && <Button text="Load more posts" onClick={loadMorePosts} disabled={noMorePosts} />}
       </div>
-    </section >
+    </section>
   );
-}
-
-/*export class Home2 extends Component {
-
-  async componentDidMount() {
-    await this.loadPosts();
-  }
-}*/
+};
